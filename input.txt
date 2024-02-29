@@ -1,0 +1,13 @@
+3
+3 3 3
+abc
+cba
+abc
+3 3 3
+abc
+abc
+abc
+3 4 3
+abca
+acab
+cbac
