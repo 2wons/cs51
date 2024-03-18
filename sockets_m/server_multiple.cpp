@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <thread>
 #include <iostream>
+#include <cstring>
 
 #define DEFAULT_BUFLEN 512
 
@@ -17,31 +18,24 @@ void handle(SOCKET client)
     int recvbuflen = DEFAULT_BUFLEN;
     do
     {
+        memset(recvbuf, 0, recvbuflen); // Clear the buffer for safety
         iResult = recv(client, recvbuf, recvbuflen, 0);
-        recvbuf[iResult] = '\0';
-
         if (iResult > 0)
         {
+            int x, y, sum;
+            std::string message(recvbuf);
             printf("Bytes received: %d\n", iResult);
+            printf("Message received: %s\n", recvbuf);
 
-            // Extracting the two numbers from the received buffer
-            int num1, num2;
-            sscanf(recvbuf, "%d %d", &num1, &num2);
-            printf("Received numbers: %d and %d\n", num1, num2);
+            sscanf(message.c_str(),"%i %i",&x,&y);
+            sum = x + y;
 
-            // Calculating the sum
-            int sum = num1 + num2;
-            printf("Sum: %d\n", sum);
+            // Convert the sum to a string to be sent back
+            char sendBuf[DEFAULT_BUFLEN]; // Buffer to hold the sum
+            sprintf(sendBuf, "%d", sum); // Convert the sum into a string
 
             // Echo the buffer back to the sender
-
-            // Converting the sum to string format
-            char sendbuf[DEFAULT_BUFLEN];
-            sprintf(sendbuf, "%d", sum);
-
-            // Echo the sum back to the sender
-            iSendResult = send(client, sendbuf, strlen(sendbuf) + 1, 0); // +1 to include the null terminator
-
+            iSendResult = send(client, sendBuf, strlen(sendBuf), 0);
             if (iSendResult == SOCKET_ERROR)
             {
                 printf("send failed with error: %d\n", WSAGetLastError());
@@ -49,7 +43,6 @@ void handle(SOCKET client)
                 WSACleanup();
                 return;
             }
-
             printf("Bytes sent: %d\n", iSendResult);
         }
 
