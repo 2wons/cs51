@@ -1,5 +1,8 @@
 # [Technical] 
-
+## Requires
+- wsl/linux
+- nvidia gpu
+  
 ## Downloads
 NVIDIA HPC SDK <br>
 https://developer.nvidia.com/nvidia-hpc-sdk-downloads
